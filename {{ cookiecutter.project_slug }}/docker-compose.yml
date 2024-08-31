@@ -1,0 +1,32 @@
+version: '3'
+services:
+    bot:
+        build: .
+        container_name: {{ cookiecutter.project_slug }}
+        image: {{ cookiecutter.project_slug }}
+        env_file: .env
+        volumes:
+            {%- if cookiecutter.copy_local_timezone -%}
+            - /etc/localtime:/etc/localtime:ro
+            {% endif %}
+            - ./data:/app/data
+        restart: unless-stopped
+        logging:
+            driver: json-file
+            options:
+                max-file: 10
+                max-size: 200k
+        environment:
+            - PGID=1001
+            - PUID=1001
+            - TZ={{ cookiecutter.timezone }}
+        {%- if cookiecutter.disable_watchtower -%}
+        labels:
+            - "com.centurylinklabs.watchtower.enable=false"
+        {% endif %}
+
+
+#networks:
+#   default:
+#     name: compose_default
+#     external: true
