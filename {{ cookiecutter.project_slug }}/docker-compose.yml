@@ -25,8 +25,9 @@ services:
             - "com.centurylinklabs.watchtower.enable=false"
         {%- endif %}
 
-
-#networks:
-#   default:
-#     name: compose_default
-#     external: true
+{% if cookiecutter.default_external_docker_network_name %}
+networks:
+   default:
+     name: {{ cookiecutter.default_external_docker_network_name }}
+     external: true
+{% endif %}
